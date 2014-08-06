@@ -20,7 +20,7 @@ Client (Generic_Read or Generic_Write or Both) <--> Server (Generic_Read and Gen
 
 #define SERVER_NAME		L"."
 #define PIPE_NAME	L"SamplePipe"
-#define FULL_PIPE_NAME	L"\\\\" SERVER_NAME L"\\" PIPE_NAME     //concatenation done by compiler
+#define FULL_PIPE_NAME	L"\\\\" SERVER_NAME L"\\pipe\\" PIPE_NAME     //concatenation done by compiler
 
 #define BUFFER_SIZE 1024
 
@@ -95,7 +95,7 @@ int wmain(int argc, wchar_t * argv[])
 		}
 	}
 
-	wprintf(L"Client is connected.");
+	wprintf(L"Client is connected.\n");
 
 	//Receive request from client.
 
@@ -130,7 +130,7 @@ int wmain(int argc, wchar_t * argv[])
 
 	//send a response from server to client.
 
-	wchar_t chResponse[BUFFER_SIZE];
+	wchar_t chResponse[] = RESPONSE_MESSAGE;
 	DWORD cbResponse, cbWritten;
 	cbResponse = sizeof(chResponse);
 
@@ -149,7 +149,7 @@ int wmain(int argc, wchar_t * argv[])
 		goto Cleanup;
 	}
 
-	wprintf(L"Sent %ld bytes to client: %s", cbWritten, chResponse);
+	wprintf_s(L"Sent %ld bytes to client: %s \n", cbWritten, chResponse);
 
 	//Flush the pipe to allow the client to read the pipe's contents before disconnecting.
 	FlushFileBuffers(hNamedPipe);
